@@ -8,8 +8,10 @@
  * @property string $title
  * @property string $description
  * @property integer $execution_date
+ * @property integer $user_id
  *
  * The followings are the available model relations:
+ * @property User $user
  * @property Task[] $tasks
  */
 class Destination extends CActiveRecord
@@ -30,13 +32,13 @@ class Destination extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, description', 'required'),
-			array('execution_date', 'numerical', 'integerOnly'=>true),
+			array('title, description, user_id', 'required'),
+			array('execution_date, user_id', 'numerical', 'integerOnly'=>true),
 			array('title', 'length', 'max'=>128),
 			array('description', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, description, execution_date', 'safe', 'on'=>'search'),
+			array('id, title, description, execution_date, user_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,6 +50,7 @@ class Destination extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'user' => array(self::BELONGS_TO, 'User', 'user_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'destination_id'),
 		);
 	}
@@ -62,6 +65,7 @@ class Destination extends CActiveRecord
 			'title' => 'Title',
 			'description' => 'Description',
 			'execution_date' => 'Execution Date',
+			'user_id' => 'User',
 		);
 	}
 
@@ -87,6 +91,7 @@ class Destination extends CActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('execution_date',$this->execution_date);
+		$criteria->compare('user_id',$this->user_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

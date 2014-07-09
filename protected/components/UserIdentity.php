@@ -15,15 +15,16 @@ class UserIdentity extends CUserIdentity
 		$user = User::model()->find('LOWER(username)=?', array($username));
 		if ($user === null)
 			$this->errorCode = self::ERROR_USERNAME_INVALID;
-		elseif (!$user->validatePassword($this->password))
+		elseif (!$user->validatePassword($this->password)) {
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
+		}
 		else
 		{
 			$this->_id = $user->id;
 			$this->username = $user->username;
 			$this->errorCode=self::ERROR_NONE;
 		}
-		return $this->errorCode===self::ERROR_NONE;
+		return !$this->errorCode;
 	}
 
 	public function getId()

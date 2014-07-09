@@ -9,7 +9,10 @@ CREATE TABLE tbl_destination (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(128) NOT NULL,
     description VARCHAR(256) NOT NULL,
-    execution_date INTEGER
+    execution_date INTEGER,
+    user_id INTEGER NOT NULL,
+    CONSTRAINT FK_destination_user FOREIGN KEY (user_id)
+        REFERENCES tbl_user (id) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE tbl_task (

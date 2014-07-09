@@ -25,5 +25,6 @@ $this->menu=array(
 		'title',
 		'description',
 		'execution_date',
+		'user_id',
 	),
 )); ?>

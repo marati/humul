@@ -21,5 +21,9 @@
 	<?php echo CHtml::encode($data->execution_date); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('user_id')); ?>:</b>
+	<?php echo CHtml::encode($data->user_id); ?>
+	<br />
+
 
 </div>
