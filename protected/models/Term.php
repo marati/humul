@@ -1,30 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "{{task}}".
+ * This is the model class for table "{{term}}".
  *
- * The followings are the available columns in table '{{task}}':
+ * The followings are the available columns in table '{{term}}':
  * @property integer $id
- * @property string $title
- * @property string $description
- * @property integer $frequency
- * @property integer $execution_mark
- * @property integer $destination_id
- *
- * The followings are the available model relations:
- * @property Destination $destination
+ * @property string $name
+ * @property integer $code
+ * @property string $type
  */
-class Task extends CActiveRecord
+class Term extends CActiveRecord
 {
-	const NOT_EXECUTE = 0;
-	const EXECUTE = 1;
+	private static $_items=array();
 
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{task}}';
+		return '{{term}}';
 	}
 
 	/**
@@ -35,15 +29,12 @@ class Task extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, description', 'required'),
-			array('title', 'length', 'max'=>128),
-			array('description', 'length', 'max'=>256),
-			array('frequency, execution_mark', 'numerical', 'integerOnly'=>true),
-			array('frequency', 'in', 'range'=>array(1,2,3,4,5,6,7)),
-			array('execution_mark', 'in', 'range'=>array(0,1)),
+			array('name, code, type', 'required'),
+			array('code', 'numerical', 'integerOnly'=>true),
+			array('name, type', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('title, description, frequency, execution_mark', 'safe', 'on'=>'search'),
+			array('id, name, code, type', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,7 +46,6 @@ class Task extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'destination' => array(self::BELONGS_TO, 'Destination', 'destination_id'),
 		);
 	}
 
@@ -66,11 +56,9 @@ class Task extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'title' => 'Title',
-			'description' => 'Description',
-			'frequency' => 'Frequency',
-			'execution_mark' => 'Execution Mark',
-			'destination_id' => 'Destination',
+			'name' => 'Name',
+			'code' => 'Code',
+			'type' => 'Type',
 		);
 	}
 
@@ -93,11 +81,9 @@ class Task extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('frequency',$this->frequency);
-		$criteria->compare('execution_mark',$this->execution_mark);
-		$criteria->compare('destination_id',$this->destination_id);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('code',$this->code);
+		$criteria->compare('type',$this->type,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -108,10 +94,35 @@ class Task extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Task the static model class
+	 * @return Term the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public static function items($type)
+	{
+		if (!isset(self::$_items[$type]))
+			self::loadItems($type);
+		return self::$_items[$type];
+	}
+
+	public static function item($type, $code)
+	{
+		if (!isset(self::$_items[$type]))
+			self::loadItems($type);
+		return isset(self::$_items[$type][$code]) ? self::$_items[$type][$code] : false;
+	}
+
+	public static function loadItems($type)
+	{
+		self::$_items[$type] = array();
+		$itemsByType = self::model()->findAll(array(
+			'condition'=>'type=:type',
+			'params'=>array(':type'=>$type),
+		));
+		foreach ($itemsByType as $item)
+			self::$_items[$type][$item->code] = $item->name;
 	}
 }
