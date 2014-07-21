@@ -15,7 +15,7 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note">Поля, отмеченные знаком <span class="required">*</span> обязательны к заполнению.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
@@ -39,14 +39,18 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'execution_mark'); ?>
-		<?php echo $form->textField($model,'execution_mark'); ?>
+		<?php echo $form->dropDownList($model,'execution_mark',Term::items('TaskTerm')); ?>
 		<?php echo $form->error($model,'execution_mark'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'destination_id'); ?>
-		<?php echo $form->textField($model,'destination_id'); ?>
-		<?php echo $form->error($model,'destination_id'); ?>
+		<?php echo $form->labelEx($model, 'destination_id'); ?>
+		<?php
+			$listDestinations = CHtml::listData(Destination::getDestinations(),
+				'id','title');
+			echo $form->dropDownList($model,'destination_id',$listDestinations);
+		?>
+		<?php echo $form->error($model, 'destination_id'); ?>
 	</div>
 
 	<div class="row buttons">

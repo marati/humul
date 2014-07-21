@@ -15,7 +15,7 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note">Поля, отмеченные знаком <span class="required">*</span> обязательны к заполнению.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
@@ -35,12 +35,6 @@
 		<?php echo $form->labelEx($model,'execution_date'); ?>
 		<?php echo $form->textField($model,'execution_date'); ?>
 		<?php echo $form->error($model,'execution_date'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'user_id'); ?>
-		<?php echo $form->textField($model,'user_id'); ?>
-		<?php echo $form->error($model,'user_id'); ?>
 	</div>
 
 	<div class="row buttons">

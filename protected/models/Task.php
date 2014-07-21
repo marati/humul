@@ -44,6 +44,7 @@ class Task extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('title, description, frequency, execution_mark', 'safe', 'on'=>'search'),
+			array('destination_id', 'safe', 'on'=>'insert'),
 		);
 	}
 
@@ -65,12 +66,11 @@ class Task extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'title' => 'Title',
-			'description' => 'Description',
-			'frequency' => 'Frequency',
-			'execution_mark' => 'Execution Mark',
-			'destination_id' => 'Destination',
+			'title' => 'Название',
+			'description' => 'Описание',
+			'frequency' => 'Частота выполнения',
+			'execution_mark' => 'Выполнено?',
+			'destination_id' => 'Отнести к',
 		);
 	}
 
@@ -92,12 +92,10 @@ class Task extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('frequency',$this->frequency);
 		$criteria->compare('execution_mark',$this->execution_mark);
-		$criteria->compare('destination_id',$this->destination_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

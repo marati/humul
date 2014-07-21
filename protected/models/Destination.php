@@ -32,13 +32,13 @@ class Destination extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, description, user_id', 'required'),
-			array('execution_date, user_id', 'numerical', 'integerOnly'=>true),
+			array('title, description', 'required'),
+			array('execution_date', 'numerical', 'integerOnly'=>true),
 			array('title', 'length', 'max'=>128),
 			array('description', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, description, execution_date, user_id', 'safe', 'on'=>'search'),
+			array('title, description, execution_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -87,11 +87,11 @@ class Destination extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
+		//$criteria->compare('id',$this->id);
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('execution_date',$this->execution_date);
-		$criteria->compare('user_id',$this->user_id);
+		//$criteria->compare('user_id',$this->user_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -107,5 +107,26 @@ class Destination extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	protected function beforeSave()
+	{
+		if (parent::beforeSave())
+		{
+			if ($this->isNewRecord)
+				$this->user_id = Yii::app()->user->id;
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public static function getDestinations()
+	{
+		$destinations = self::model()->findAll(array(
+			'condition'=>'user_id=:user_id',
+			'params'=>array(':user_id'=>Yii::app()->user->id),
+		));
+		return $destinations;
 	}
 }
