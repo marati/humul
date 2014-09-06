@@ -113,7 +113,13 @@ class DestinationController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Destination');
+		$criteria=new CDbCriteria(array(
+			'condition'=>'user_id=:user_id',
+			'params'=>array(':user_id'=>Yii::app()->user->id),
+		));
+		$dataProvider=new CActiveDataProvider('Destination', array(
+			'criteria'=>$criteria,
+		));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

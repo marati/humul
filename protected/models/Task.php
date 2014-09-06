@@ -44,7 +44,7 @@ class Task extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('title, description, frequency, execution_mark', 'safe', 'on'=>'search'),
-			array('destination_id', 'safe', 'on'=>'insert'),
+			array('destination_id', 'safe'),
 		);
 	}
 
